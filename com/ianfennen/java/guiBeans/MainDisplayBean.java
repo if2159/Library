@@ -26,8 +26,6 @@ public class MainDisplayBean extends javax.swing.JPanel {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(FileLoaderBean.FILE_LOADED_EVENT)) {
                     if (evt.getNewValue().equals(FileLoaderBean.FILE_STATE_CHANGED)) {
-                        System.out.println("Property Event!");
-                        System.out.println(fileLoaderBean1.getBookList());
                         insertDataIntoTable(fileLoaderBean1.getBookList());
                     }
                 }

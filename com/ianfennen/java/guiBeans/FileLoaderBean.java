@@ -109,11 +109,9 @@ public class FileLoaderBean extends javax.swing.JPanel {
             System.out.println(fileIn.hasNext() + fileName);
             while (fileIn.hasNext()) {
                 String line = fileIn.nextLine();
-                System.out.println("Line: " + line);
                 bookList.add(lineToBook(line));
             }
 
-            System.out.println("Inside loadFile: " + bookList);
             firePropertyChange(FILE_LOADED_EVENT, "", FILE_STATE_CHANGED);
 
         } catch (FileNotFoundException | InputMismatchException e) {
@@ -135,7 +133,6 @@ public class FileLoaderBean extends javax.swing.JPanel {
             String title = ar[0];
             String author = ar[1];
             int isbn = Integer.parseInt(ar[2]);
-            System.out.println("Book: " + new Book(title, author, isbn));
             return new Book(title, author, isbn);
         } catch (Exception e) {
             throw new InputMismatchException("Input File Format Invalid");
