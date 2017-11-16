@@ -6,6 +6,7 @@
 package com.ianfennen.java.guiBeans;
 
 import com.ianfennen.java.dataObjects.Book;
+import com.ianfennen.java.guiBeans.interfaces.FileInputMethod;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -18,20 +19,17 @@ import javax.swing.JOptionPane;
  *
  * @author Ian Fennen
  */
-public class FileLoaderBean extends javax.swing.JPanel {
+public class TextFileLoaderBean extends FileInputMethod {
 
-    /**
-     * {@code List} That contains all books loaded, null if file not loaded.
-     */
-    ArrayList<Book> bookList = null;
+    
 
-    public static final String FILE_LOADED_EVENT = "FILE_LOADED_EVENT";
+    public static final String FILE_LOADER_EVENT = "FILE_LOADER_EVENT";
     public static final String FILE_STATE_CHANGED = "FILE_STATE_CHANGED";
 
     /**
      * Creates new form FileLoaderBean
      */
-    public FileLoaderBean() {
+    public TextFileLoaderBean() {
         initComponents();
     }
 
@@ -68,7 +66,7 @@ public class FileLoaderBean extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(inputFileNameLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inputFileField, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -87,15 +85,17 @@ public class FileLoaderBean extends javax.swing.JPanel {
                     .addComponent(inputFileField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseFileBtn)
                     .addComponent(loadFileBtn))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void browseFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseFileBtnActionPerformed
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.showOpenDialog(this);
-        String fileName = fileChooser.getSelectedFile().getAbsolutePath();
-        inputFileField.setText(fileName);
+        if(fileChooser.getSelectedFile() != null){
+            String fileName = fileChooser.getSelectedFile().getAbsolutePath();
+            inputFileField.setText(fileName);
+        }
     }//GEN-LAST:event_browseFileBtnActionPerformed
 
     private void loadFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFileBtnActionPerformed
@@ -106,13 +106,12 @@ public class FileLoaderBean extends javax.swing.JPanel {
         try {
             Scanner fileIn = new Scanner(new File(fileName));
             bookList = new ArrayList();
-            System.out.println(fileIn.hasNext() + fileName);
             while (fileIn.hasNext()) {
                 String line = fileIn.nextLine();
                 bookList.add(lineToBook(line));
             }
 
-            firePropertyChange(FILE_LOADED_EVENT, "", FILE_STATE_CHANGED);
+            firePropertyChange(FILE_LOADER_EVENT, "", FILE_STATE_CHANGED);
 
         } catch (FileNotFoundException | InputMismatchException e) {
             displayError("Error reading from file: " + fileName);
@@ -132,33 +131,16 @@ public class FileLoaderBean extends javax.swing.JPanel {
             String[] ar = line.split(",");
             String title = ar[0];
             String author = ar[1];
-            int isbn = Integer.parseInt(ar[2]);
+            String isbn = ar[2];
             return new Book(title, author, isbn);
         } catch (Exception e) {
             throw new InputMismatchException("Input File Format Invalid");
         }
     }
 
-    /**
-     * Returns the {@code bookList}, can be {@code null} if the book has not been loaded.
-     *
-     * @return The {@code bookList} with the loaded books. Returns {@code null} if file has not been loaded.
-     */
-    public ArrayList<Book> getBookList() {
-        return bookList;
-    }
+    
 
-    /**
-     * Displays an error window with text {@code errorMsg}.
-     *
-     * @param errorMsg The error message displayed to the user. This is the entire text shown.
-     */
-    private void displayError(String errorMsg) {
-        JOptionPane.showMessageDialog(this,
-                errorMsg,
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-    }
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

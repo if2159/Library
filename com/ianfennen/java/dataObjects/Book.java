@@ -12,9 +12,9 @@ package com.ianfennen.java.dataObjects;
 public class Book {
     private String title;
     private String author;
-    private int isbn;
+    private String isbn;
     
-    public Book(String title, String author, int isbn){
+    public Book(String title, String author, String isbn){
         this.title = title;
         this.author = author;
         this.isbn = isbn;
@@ -22,7 +22,7 @@ public class Book {
     public Book(){
         this.title = "Untitled";
         this.author = "No Author";
-        this.isbn = -1;
+        this.isbn = "-1";
     }
     
     public Object[] toArray(){
@@ -30,8 +30,12 @@ public class Book {
         return ar;
     }
     
+    public boolean equals(Object obj){
+        return obj instanceof Book && ((Book)obj).toString().equals(this.toString());
+    }
+    
     @Override
     public String toString(){
-        return author + ", " + title + ", " + isbn; 
+        return author + "," + title + "," + isbn; 
     }
 }

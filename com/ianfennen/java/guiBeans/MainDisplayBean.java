@@ -16,26 +16,68 @@ import java.util.ArrayList;
  */
 public class MainDisplayBean extends javax.swing.JPanel {
 
+    private ArrayList<Book> bookList;
+    private int inputType;
+
     /**
      * Creates new form MainDisplayBean
      */
+    @SuppressWarnings("Convert2Lambda")
     public MainDisplayBean() {
         initComponents();
-        fileLoaderBean1.addPropertyChangeListener(new PropertyChangeListener() {
+        bookList = new ArrayList();
+        genericLoaderBean1.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals(FileLoaderBean.FILE_LOADED_EVENT)) {
-                    if (evt.getNewValue().equals(FileLoaderBean.FILE_STATE_CHANGED)) {
-                        insertDataIntoTable(fileLoaderBean1.getBookList());
+                if (evt.getPropertyName().equals(TextFileLoaderBean.FILE_LOADER_EVENT)) {
+                    if (evt.getNewValue().equals(TextFileLoaderBean.FILE_STATE_CHANGED)) {
+                        bookList = genericLoaderBean1.getBookList();
+                        insertDataIntoTable(bookList);
                     }
                 }
             }
 
         });
+        updateFileBean1.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals(UpdateFileBean.UPDATE_FILE_EVENT)) {
+                    if (evt.getNewValue().equals(UpdateFileBean.SAVE_FILE_EVENT)) {
+                        updateFileBean1.saveTable(dataTableBean1.getBookList());
+                    }
+                }
+            }
+        });
+
+        inputType = 0;
     }
 
     private void insertDataIntoTable(ArrayList<Book> bookList) {
         dataTableBean1.updateTable(bookList);
+    }
+
+    public void setInputMethod(int type) {
+        if (inputType != type) {
+            inputType = type;
+            changeInputDisplay();
+        }
+
+    }
+
+    private void changeInputDisplay() {
+        switch (inputType) {
+            case 1:
+                genericLoaderBean1.changeCard("XMLFileCard");
+                break;
+            case 2:
+                genericLoaderBean1.changeCard("SQLDataCard");
+                break;
+            case 0:
+            default:
+                genericLoaderBean1.changeCard("TextFileCard");
+                break;
+
+        }
     }
 
     /**
@@ -46,7 +88,8 @@ public class MainDisplayBean extends javax.swing.JPanel {
     private void initComponents() {
 
         dataTableBean1 = new com.ianfennen.java.guiBeans.DataTableBean();
-        fileLoaderBean1 = new com.ianfennen.java.guiBeans.FileLoaderBean();
+        updateFileBean1 = new com.ianfennen.java.guiBeans.UpdateFileBean();
+        genericLoaderBean1 = new com.ianfennen.java.guiBeans.GenericLoaderBean();
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -54,18 +97,21 @@ public class MainDisplayBean extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(dataTableBean1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fileLoaderBean1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dataTableBean1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(updateFileBean1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(genericLoaderBean1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(fileLoaderBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(genericLoaderBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(dataTableBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(dataTableBean1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(updateFileBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -73,6 +119,7 @@ public class MainDisplayBean extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ianfennen.java.guiBeans.DataTableBean dataTableBean1;
-    private com.ianfennen.java.guiBeans.FileLoaderBean fileLoaderBean1;
+    private com.ianfennen.java.guiBeans.GenericLoaderBean genericLoaderBean1;
+    private com.ianfennen.java.guiBeans.UpdateFileBean updateFileBean1;
     // End of variables declaration//GEN-END:variables
 }

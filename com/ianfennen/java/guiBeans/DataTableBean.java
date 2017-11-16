@@ -7,6 +7,8 @@ package com.ianfennen.java.guiBeans;
 
 import com.ianfennen.java.dataObjects.Book;
 import java.util.ArrayList;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,19 +17,79 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DataTableBean extends javax.swing.JPanel {
 
+    private ArrayList<Book> bookList;
+
     /**
      * Creates new form DataTableBean
      */
     public DataTableBean() {
         initComponents();
+        bookTable.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                switch (e.getType()) {
+                    case TableModelEvent.DELETE:
+                        //updateBookList(null);
+                        break;
+                    case TableModelEvent.INSERT:
+                        //updateBookList(null);
+                        break;
+                    case TableModelEvent.UPDATE:
+                        updateBookList(null);
+                        break;
+                }
+            }
+
+        });
+        bookList = new ArrayList();
     }
-    
-    
-    public void updateTable(ArrayList<Book> bookList){
-        DefaultTableModel dtm = (DefaultTableModel)bookTable.getModel();
-        for(Book b : bookList){
+
+    private void updateBookList(ArrayList<Book> list) {
+        if (list != null) {
+            System.out.println("setting bookList " + list.size());
+            bookList = list;
+        } else {
+            DefaultTableModel dtm = (DefaultTableModel) bookTable.getModel();
+
+            for (int i = 0; i < dtm.getRowCount(); i++) {
+
+                String author = (String) dtm.getValueAt(i, 0);
+                String title = (String) dtm.getValueAt(i, 1);
+                String ISBN = (String) dtm.getValueAt(i, 2);
+                System.out.println("Trying to add book");
+                if (author.length() != 0 && title.length() != 0 && validateISBN(ISBN)) {
+                    Book b = new Book(author, title, ISBN);
+                    System.out.println("Adding book" + b);
+                    if (!bookList.contains(b)) {
+                        bookList.add(b);
+                        String blankRow[] = {"", "", ""};
+                        dtm.addRow(blankRow);
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    public ArrayList<Book> getBookList() {
+        return bookList;
+    }
+
+    private boolean validateISBN(String ISBN) {
+        return ISBN != null && ISBN.length() == 10 && ISBN.matches("\\d+");
+    }
+
+    public void updateTable(ArrayList<Book> bookList) {
+
+        DefaultTableModel dtm = (DefaultTableModel) bookTable.getModel();
+        for (Book b : bookList) {
             dtm.addRow(b.toArray());
         }
+        Object blankRow[] = {"", "", ""};
+        dtm.addRow(blankRow);
+
+        updateBookList(bookList);
     }
 
     /**
@@ -51,16 +113,9 @@ public class DataTableBean extends javax.swing.JPanel {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(bookTable);
