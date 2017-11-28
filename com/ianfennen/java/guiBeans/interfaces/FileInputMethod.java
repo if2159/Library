@@ -5,7 +5,7 @@
  */
 package com.ianfennen.java.guiBeans.interfaces;
 
-import com.ianfennen.java.dataObjects.Book;
+import com.ianfennen.java.dataObjects.BookReg;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -20,14 +20,14 @@ public abstract class FileInputMethod extends javax.swing.JPanel {
      *
      * @return The {@code bookList} with the loaded books. Returns {@code null} if file has not been loaded.
      */
-    public ArrayList<Book> getBookList() {
+    public ArrayList<BookReg> getBookList() {
         return bookList;
     }
     
     /**
      * {@code List} That contains all books loaded, null if file not loaded.
      */
-    protected ArrayList<Book> bookList = null;
+    protected ArrayList<BookReg> bookList = null;
     
     
     /**

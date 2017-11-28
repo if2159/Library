@@ -6,7 +6,15 @@
 package com.ianfennen.java.guiBeans;
 
 import com.ianfennen.java.guiBeans.interfaces.FileInputMethod;
+import com.ianfennen.java.xml.Book;
+import com.ianfennen.java.xml.Library;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -93,7 +101,16 @@ public class XMLFileLoaderBean extends FileInputMethod {
 
     
     private void loadFile(String fileName){
-        
+        try {
+
+            File file = new File(fileName);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Library.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            Library l = (Library) jaxbUnmarshaller.unmarshal(file);
+            System.out.println(l.getBook());
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

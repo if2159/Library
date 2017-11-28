@@ -5,7 +5,7 @@
  */
 package com.ianfennen.java.guiBeans;
 
-import com.ianfennen.java.dataObjects.Book;
+import com.ianfennen.java.dataObjects.BookReg;
 import java.awt.CardLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -36,7 +36,7 @@ public class GenericLoaderBean extends javax.swing.JPanel {
         firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
     }
     
-    public ArrayList<Book> getBookList(){
+    public ArrayList<BookReg> getBookList(){
         switch(currentCard){
             case 1:
                 return xMLFileLoaderBean1.getBookList();

@@ -8,7 +8,6 @@ package com.ianfennen.java;
 import com.ianfennen.java.guiBeans.SelectInputTypeDialog;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JFrame;
 
 /**
  *
@@ -78,7 +77,9 @@ public class MainDisplay extends javax.swing.JFrame {
         sit.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                mainDisplayBean1.setInputMethod(sit.getSelectedInput());
+                mainDisplayBean1.setInputMethod(
+                        sit.getSelectedInput()
+                );
             }
         });
         sit.setVisible(true);

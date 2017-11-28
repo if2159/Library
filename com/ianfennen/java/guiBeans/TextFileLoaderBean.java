@@ -5,7 +5,7 @@
  */
 package com.ianfennen.java.guiBeans;
 
-import com.ianfennen.java.dataObjects.Book;
+import com.ianfennen.java.dataObjects.BookReg;
 import com.ianfennen.java.guiBeans.interfaces.FileInputMethod;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,8 +20,6 @@ import javax.swing.JOptionPane;
  * @author Ian Fennen
  */
 public class TextFileLoaderBean extends FileInputMethod {
-
-    
 
     public static final String FILE_LOADER_EVENT = "FILE_LOADER_EVENT";
     public static final String FILE_STATE_CHANGED = "FILE_STATE_CHANGED";
@@ -46,6 +44,8 @@ public class TextFileLoaderBean extends FileInputMethod {
         loadFileBtn = new javax.swing.JButton();
 
         inputFileNameLbl.setText("Input File Name: ");
+
+        inputFileField.setText("C:\\Users\\Ian Fennen\\Desktop\\books2.csv");
 
         browseFileBtn.setText("Browse File");
         browseFileBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -92,7 +92,7 @@ public class TextFileLoaderBean extends FileInputMethod {
     private void browseFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseFileBtnActionPerformed
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.showOpenDialog(this);
-        if(fileChooser.getSelectedFile() != null){
+        if (fileChooser.getSelectedFile() != null) {
             String fileName = fileChooser.getSelectedFile().getAbsolutePath();
             inputFileField.setText(fileName);
         }
@@ -123,24 +123,20 @@ public class TextFileLoaderBean extends FileInputMethod {
     /**
      * Converts a line of text separated by commas into a book object.
      *
-     * @param line The line of text that contains the info for a {@code Book}
-     * @return The {@code Book} created from {@code line}
+     * @param line The line of text that contains the info for a {@code BookReg}
+     * @return The {@code BookReg} created from {@code line}
      */
-    private Book lineToBook(String line) throws InputMismatchException {
+    private BookReg lineToBook(String line) throws InputMismatchException {
         try {
             String[] ar = line.split(",");
             String title = ar[0];
             String author = ar[1];
             String isbn = ar[2];
-            return new Book(title, author, isbn);
+            return new BookReg(title, author, isbn);
         } catch (Exception e) {
             throw new InputMismatchException("Input File Format Invalid");
         }
     }
-
-    
-
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

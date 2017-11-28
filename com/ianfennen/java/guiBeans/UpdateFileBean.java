@@ -5,7 +5,7 @@
  */
 package com.ianfennen.java.guiBeans;
 
-import com.ianfennen.java.dataObjects.Book;
+import com.ianfennen.java.dataObjects.BookReg;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -95,23 +95,11 @@ public class UpdateFileBean extends javax.swing.JPanel {
     }//GEN-LAST:event_browseForSaveBtnActionPerformed
 
     private void saveFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileBtnActionPerformed
-        System.out.println("Button pressed");
-        firePropertyChange(UPDATE_FILE_EVENT, "", SAVE_FILE_EVENT);
-        
+        System.out.println("Button pressed1" + UPDATE_FILE_EVENT + outputFileField.getText());
+        this.firePropertyChange(UPDATE_FILE_EVENT, "", outputFileField.getText());
     }//GEN-LAST:event_saveFileBtnActionPerformed
 
-    public void saveTable(ArrayList<Book> bookList){
-        System.out.println("Save Table" + bookList.size());
-        String fileName = outputFileField.getText();
-        try(PrintWriter pw = new PrintWriter(new File(fileName))) {
-            for(Book b : bookList){
-                pw.write(b.toString() + "\n");
-            }
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-        
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseForSaveBtn;

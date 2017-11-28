@@ -5,7 +5,7 @@
  */
 package com.ianfennen.java.guiBeans;
 
-import com.ianfennen.java.dataObjects.Book;
+import com.ianfennen.java.dataObjects.BookReg;
 import java.util.ArrayList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DataTableBean extends javax.swing.JPanel {
 
-    private ArrayList<Book> bookList;
+    private ArrayList<BookReg> bookList;
 
     /**
      * Creates new form DataTableBean
@@ -29,10 +29,8 @@ public class DataTableBean extends javax.swing.JPanel {
             public void tableChanged(TableModelEvent e) {
                 switch (e.getType()) {
                     case TableModelEvent.DELETE:
-                        //updateBookList(null);
                         break;
                     case TableModelEvent.INSERT:
-                        //updateBookList(null);
                         break;
                     case TableModelEvent.UPDATE:
                         updateBookList(null);
@@ -44,9 +42,8 @@ public class DataTableBean extends javax.swing.JPanel {
         bookList = new ArrayList();
     }
 
-    private void updateBookList(ArrayList<Book> list) {
+    private void updateBookList(ArrayList<BookReg> list) {
         if (list != null) {
-            System.out.println("setting bookList " + list.size());
             bookList = list;
         } else {
             DefaultTableModel dtm = (DefaultTableModel) bookTable.getModel();
@@ -58,8 +55,7 @@ public class DataTableBean extends javax.swing.JPanel {
                 String ISBN = (String) dtm.getValueAt(i, 2);
                 System.out.println("Trying to add book");
                 if (author.length() != 0 && title.length() != 0 && validateISBN(ISBN)) {
-                    Book b = new Book(author, title, ISBN);
-                    System.out.println("Adding book" + b);
+                    BookReg b = new BookReg(author, title, ISBN);
                     if (!bookList.contains(b)) {
                         bookList.add(b);
                         String blankRow[] = {"", "", ""};
@@ -72,7 +68,7 @@ public class DataTableBean extends javax.swing.JPanel {
         }
     }
 
-    public ArrayList<Book> getBookList() {
+    public ArrayList<BookReg> getBookList() {
         return bookList;
     }
 
@@ -80,10 +76,10 @@ public class DataTableBean extends javax.swing.JPanel {
         return ISBN != null && ISBN.length() == 10 && ISBN.matches("\\d+");
     }
 
-    public void updateTable(ArrayList<Book> bookList) {
+    public void updateTable(ArrayList<BookReg> bookList) {
 
         DefaultTableModel dtm = (DefaultTableModel) bookTable.getModel();
-        for (Book b : bookList) {
+        for (BookReg b : bookList) {
             dtm.addRow(b.toArray());
         }
         Object blankRow[] = {"", "", ""};

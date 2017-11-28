@@ -5,10 +5,19 @@
  */
 package com.ianfennen.java.guiBeans;
 
-import com.ianfennen.java.dataObjects.Book;
+import com.ianfennen.java.dataObjects.BookReg;
+import com.ianfennen.java.xml.Book;
+import com.ianfennen.java.xml.Library;
+import java.awt.CardLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 /**
  *
@@ -16,7 +25,7 @@ import java.util.ArrayList;
  */
 public class MainDisplayBean extends javax.swing.JPanel {
 
-    private ArrayList<Book> bookList;
+    private ArrayList<BookReg> bookList;
     private int inputType;
 
     /**
@@ -38,21 +47,83 @@ public class MainDisplayBean extends javax.swing.JPanel {
             }
 
         });
+        
         updateFileBean1.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
+                System.out.println("Property change event " + evt.getPropertyName());
                 if (evt.getPropertyName().equals(UpdateFileBean.UPDATE_FILE_EVENT)) {
-                    if (evt.getNewValue().equals(UpdateFileBean.SAVE_FILE_EVENT)) {
-                        updateFileBean1.saveTable(dataTableBean1.getBookList());
-                    }
+                    //if (evt.getNewValue().equals(UpdateFileBean.SAVE_FILE_EVENT)) {
+                    System.out.println("Save Table");
+                    saveTable(dataTableBean1.getBookList(), (String) evt.getNewValue());
+                    //}
                 }
+                System.out.println(evt.getPropertyName());
             }
         });
 
         inputType = 0;
     }
 
-    private void insertDataIntoTable(ArrayList<Book> bookList) {
+    public void saveTable(ArrayList<BookReg> bookList, String fileName) {
+        System.out.println("Output file");
+        switch(inputType){
+            case 0:
+                saveCSV(bookList, fileName);
+                break;
+            case 1:
+                System.out.println("XML 1");
+                saveXML(bookList, fileName);
+                break;
+            case 2:
+                break;
+                
+        }
+        
+
+    }
+    
+    private void saveXML(ArrayList<BookReg> bookList, String fileName){
+        System.out.println("XML");
+        Library l = new Library();
+        for(BookReg bb : bookList){
+            Book b = new Book();
+            b.setAuthor(bb.getAuthor());
+            b.setISBN(bb.getIsbn());
+            b.setTitle(bb.getTitle());
+            l.getBook().add(b);
+        }
+        
+        try {
+            if(!fileName.endsWith(".xml")){
+                fileName = fileName + ".xml";
+            }
+            File file = new File(fileName);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Library.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            // output pretty printed
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            //jaxbMarshaller.marshal(b, file);
+            jaxbMarshaller.marshal(l, file);
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void saveCSV(ArrayList<BookReg> bookList, String fileName){
+        try (PrintWriter pw = new PrintWriter(new File(fileName))) {
+            for (BookReg b : bookList) {
+                pw.write(b.toString() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void insertDataIntoTable(ArrayList<BookReg> bookList) {
         dataTableBean1.updateTable(bookList);
     }
 
@@ -78,6 +149,11 @@ public class MainDisplayBean extends javax.swing.JPanel {
                 break;
 
         }
+    }
+    
+    public void changeCard(String cardName) {
+        CardLayout cardLayout = (CardLayout) this.getLayout();
+        cardLayout.show(this, cardName);
     }
 
     /**
